@@ -1,6 +1,6 @@
 <h1>ExpNo 6 : Implement Minimax Search Algorithm for a Simple TIC-TAC-TOE game</h1> 
-<h3>Name:      </h3>
-<h3>Register Number:       </h3>
+<h3>Name: Selva kani R      </h3>
+<h3>Register Number:2305002020       </h3>
 <H3>Aim:</H3>
 <p>
     Implement Minimax Search Algorithm for a Simple TIC-TAC-TOE game
@@ -103,50 +103,58 @@ def minimax(game)
 end
 ## program
 ```python
+
 import math
+b = [' ']*9
 
-def minimax(curDepth, nodeIndex, maxTurn, scores, targetDepth, alpha, beta):
-    # Base case: targetDepth reached
-    if curDepth == targetDepth:
-        return scores[nodeIndex]
+def show():
+    for i in range(0,9,3):
+        print(b[i], '|', b[i+1], '|', b[i+2])
 
-    if maxTurn:
-        maxEval = -math.inf  # Initialize maximum evaluation
-        # Maximizing player's turn
-        for i in range(2):  # There are two children for each node
-            eval = minimax(curDepth + 1, nodeIndex * 2 + i, False, scores, targetDepth, alpha, beta)
-            maxEval = max(maxEval, eval)
-            alpha = max(alpha, eval)  # Update alpha
-            if beta <= alpha:  # Beta pruning
-                break
-        return maxEval
-    else:
-        minEval = math.inf  # Initialize minimum evaluation
-        # Minimizing player's turn
-        for i in range(2):  # There are two children for each node
-            eval = minimax(curDepth + 1, nodeIndex * 2 + i, True, scores, targetDepth, alpha, beta)
-            minEval = min(minEval, eval)
-            beta = min(beta, eval)  # Update beta
-            if beta <= alpha:  # Alpha pruning
-                break
-        return minEval
+def win(p):
+    w = [(0,1,2),(3,4,5),(6,7,8),(0,3,6),(1,4,7),(2,5,8),(0,4,8),(2,4,6)]
+    return any(b[x]==b[y]==b[z]==p for x,y,z in w)
 
- scores = [3, 5, 6, 9, 1, 2, 0, -1]
-    targetDepth = 3  # Example target depth
+def minimax(isMax):
+    if win('O'): return 1
+    if win('X'): return -1
+    if ' ' not in b: return 0
+    best = -math.inf if isMax else math.inf
+    for i in range(9):
+        if b[i]==' ':
+            b[i] = 'O' if isMax else 'X'
+            val = minimax(not isMax)
+            b[i] = ' '
+            best = max(best,val) if isMax else min(best,val)
+    return best
 
-    # Start Minimax from the root with initial alpha and beta values
-    best_value = minimax(0, 0, True, scores, targetDepth, -math.inf, math.inf)
-    print("The optimal value is:", best_value)
+def best_move():
+    best, move = -math.inf, -1
+    for i in range(9):
+        if b[i]==' ':
+            b[i]='O'
+            val=minimax(False)
+            b[i]=' '
+            if val>best: best,move=val,i
+    return move
+
+while True:
+    show()
+    if win('X') or win('O') or ' ' not in b: break
+    p=int(input("Enter 0-8: "))
+    if b[p]==' ':
+        b[p]='X'
+        if not win('X') and ' ' in b:
+            b[best_move()]='O'
+show()
+print("Winner:", "O" if win('O') else "X" if win('X') else "Draw")
+
 ```
 
 <hr>
 <h2>Sample Input and Output</h2>
 
-![image](https://github.com/natsaravanan/19AI405FUNDAMENTALSOFARTIFICIALINTELLIGENCE/assets/87870499/6b668685-8bcc-43c5-b5c2-ddd43f3da84a)
-![image](https://github.com/natsaravanan/19AI405FUNDAMENTALSOFARTIFICIALINTELLIGENCE/assets/87870499/8ca1b08a-8312-4ef5-89df-e69b7b2c3fa2)
-![image](https://github.com/natsaravanan/19AI405FUNDAMENTALSOFARTIFICIALINTELLIGENCE/assets/87870499/dc06427a-d4ce-43a1-95bd-9acfaefac323)
-![image](https://github.com/natsaravanan/19AI405FUNDAMENTALSOFARTIFICIALINTELLIGENCE/assets/87870499/a8a27e2a-6fd4-46a2-afb5-6d27b8556702)
-![image](https://github.com/natsaravanan/19AI405FUNDAMENTALSOFARTIFICIALINTELLIGENCE/assets/87870499/a2acb6a1-ed8e-42e5-8968-fe805e4b0255)
+<img width="388" height="629" alt="Screenshot 2025-10-24 143233" src="https://github.com/user-attachments/assets/7a4645e2-3690-4db3-9f21-5b726e953c8d" />
 
 <hr>
 <h2>Result:</h2>
